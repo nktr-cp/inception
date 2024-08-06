@@ -1,8 +1,21 @@
 
 FROM debian:latest
 
-RUN apt update && apt upgrade && apt install -y nginx
+RUN apt update && apt upgrade && apt install -y nginx openssl
+
+RUN mkdir -p /etc/nginx/ssl/certs && \
+	mkdir -p /etc/nginx/ssl/private
+
+RUN openssl req -x509 -nodes -out /etc/nginx/ssl/certs/inception.crt -keyout \
+		/etc/nginx/ssl/private/inception.key -subj "/C=JA/ST=Tokyo/L=Shinjuku/O=42Tokyo/OU=42Tokyo/CN=inception"
 
 COPY conf/default.conf /etc/nginx/sites-available/default
 
+RUN mkdir -p /var/www/html
+
+# change the ownership of the html directory
+RUN chown -R www-data:www-data /var/www/html && \
+	chmod -R 755 /var/www/html
+
+# start nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
