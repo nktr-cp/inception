@@ -1,13 +1,12 @@
-
+## the penultimate stable version
 FROM debian:bullseye
 
-RUN apt update && apt upgrade && apt install -y mariadb-server
+## -y: automatic yes to all prompts
+RUN apt update && apt upgrade -y && apt install -y mariadb-server
 
-COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/.
-COPY tools/init.sql /etc/mysql/init.sql
-COPY tools/mysql_setup.sh .
-RUN chmod +x mysql_setup.sh
+COPY ./tools/mdb-conf.sh /usr/local/bin/mdb-conf.sh
+RUN chmod +x /usr/local/bin/mdb-conf.sh
 
-RUN mkdir /run/mysqld
+EXPOSE 3306
 
-CMD ["./mysql_setup.sh"]
+ENTRYPOINT ["/usr/local/bin/mdb-conf.sh"]

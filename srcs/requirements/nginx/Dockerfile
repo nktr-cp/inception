@@ -1,24 +1,14 @@
-
-# stable version
+## the penultimate stable version
 FROM debian:bullseye
 
-RUN apt update && apt upgrade && apt install -y nginx openssl
+RUN apt update && apt upgrade -y && apt install -y nginx openssl
 
-RUN mkdir -p /etc/nginx/ssl/certs && \
-	mkdir -p /etc/nginx/ssl/private
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/certs/inception.crt -keyout \
-		/etc/nginx/ssl/private/inception.key -subj "/C=JA/ST=Tokyo/L=Shinjuku/O=42Tokyo/OU=42Tokyo/CN=knishiok.42.fr/UID=knishiok"
-
-COPY conf/default.conf /etc/nginx/sites-available/default
-
-RUN mkdir -p /var/www/html
-
-# change the ownership of the html directory
-RUN chown -R www-data:www-data /var/www/html && \
-	chmod -R 755 /var/www/html
+COPY ./tools/nginx-conf.sh /usr/local/bin/nginx-conf.sh
+RUN chmod +x /usr/local/bin/nginx-conf.sh
 
 EXPOSE 443
 
-# start nginx in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+## execute in the foreground
+ENTRYPOINT ["/usr/local/bin/nginx-conf.sh"]

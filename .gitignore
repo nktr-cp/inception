@@ -1,4 +1,4 @@
-srcs/database/
-srcs/web/
-
-srcs/.env
+secrets/
+*/.env
+**/mdb/
+**/wp/
