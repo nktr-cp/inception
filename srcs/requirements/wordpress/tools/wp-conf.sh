@@ -11,7 +11,7 @@ echo "===> Configuring wordpress..."
 wp core download --allow-root
 
 DB_PASS=$(cat /run/secrets/db_user_password)
-if ! wp core is-installed --allow-root; then
+if [ ! -f /var/www/html/wp-config.php ]; then
 	wp core config \
 		--dbhost=mariadb:3306 \
 		--dbname=$DB_NAME \

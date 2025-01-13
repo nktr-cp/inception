@@ -2,7 +2,6 @@ version: "3.8"
 
 services:
   mariadb:
-    image: mariadb
     container_name: mariadb
     build: ./requirements/mariadb
     volumes:
@@ -15,15 +14,17 @@ services:
     secrets:
       - db_user_password
       - db_root_password
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nginx:
-    image: nginx
     container_name: nginx
     build: ./requirements/nginx
     ports:
       - "443:443"
-    depends_on:
-      - wordpress
     volumes:
       - wordpress:/var/www/html
     env_file:
@@ -33,13 +34,12 @@ services:
     restart: always
     secrets:
       - credentials
+    depends_on:
+      - wordpress
 
   wordpress:
-    image: wordpress
     container_name: wordpress
     build: ./requirements/wordpress
-    # depends_on:
-    #   mariadb
     volumes:
       - wordpress:/var/www/html
     env_file :
@@ -47,6 +47,9 @@ services:
     networks:
       - inception
     restart: always
+    depends_on:
+       mariadb:
+        condition: service_healthy
     secrets:
       - db_user_password
       - wp_admin_password
