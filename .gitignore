@@ -1,4 +1,5 @@
-secrets/
-**/.env
+secrets/*
+!secrets/.gitkeep
+srcs/.env
 **/mdb/
 **/wp/
