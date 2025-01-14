@@ -46,4 +46,4 @@ fi
 mkdir -p /run/php
 
 ## -F: stay in the foreground
-php-fpm7.4 -F
+exec php-fpm7.4 -F

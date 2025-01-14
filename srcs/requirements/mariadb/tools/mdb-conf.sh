@@ -5,7 +5,14 @@ service mariadb start
 ## ensure mariadb is running
 ## 5 seconds may not be enough
 echo "===> Waiting for mariadb to start..."
-sleep 5
+for i in {1..30}; do
+    if mariadb --execute "SELECT 1;" &>/dev/null; then
+        echo "===> MariaDB is ready!"
+        break
+    fi
+    echo "====> Waiting for MariaDB..."
+    sleep 1
+done
 
 ## if database doesn't exist, create it
 echo "===> Configuring mariadb..."
@@ -27,4 +34,4 @@ echo "===> Finished configuring mariadb..."
 echo "===> Restarting mariadb..."
 ## default port: 3306
 ## To allow connections from server, accept all incoming connections
-mysqld_safe --bind-address=0.0.0.0 --datadir="/var/lib/mysql"
+exec mysqld_safe --bind-address=0.0.0.0 --datadir="/var/lib/mysql"

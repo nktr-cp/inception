@@ -10,4 +10,4 @@ openssl req -x509 -nodes \
 	-subj "/C=${COUNTRY}/ST=${STATE}/L=${LOCALITY}/O=${ORGANIZATION}/OU=${ORG_UNIT}/CN=${COMMON_NAME}/UID=${USER_ID}"
 
 echo "===> Starting nginx..."
-nginx -g "daemon off;"
+exec nginx -g "daemon off;"
