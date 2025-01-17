@@ -7,10 +7,10 @@ service mariadb start
 echo "===> Waiting for mariadb to start..."
 for i in {1..30}; do
     if mariadb --execute "SELECT 1;" &>/dev/null; then
-        echo "===> MariaDB is ready!"
+        echo "===> mariadb is ready!"
         break
     fi
-    echo "====> Waiting for MariaDB..."
+    echo "====> Waiting for mariadb..."
     sleep 1
 done
 
